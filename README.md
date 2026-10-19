@@ -245,7 +245,7 @@ Ao executar o código, BFS e DFS podem devolver outra ordem igualmente válida (
 ## 7. Atividade complementar — Encontrar um caminho e calcular o seu tempo
 **Estes exercícios deverão ser realizados em tempo extra-aula. A sua resolução é vivamente aconselhada.**
 
-Realizem estes exercícios pela ordem apresentada. Utilizem a rede não orientada do metro e as classes de domínio já existentes. As operações já estão declaradas na interface `MetroNetwork`. Leiam os respetivos contratos e completem as implementações com TODO em `MetroNetworkImpl`.
+Realizem estes exercícios pela ordem apresentada. Utilizem a rede não orientada do metro e as classes de domínio já existentes. As três operações principais já estão declaradas na interface `MetroNetwork`. Leiam os respetivos contratos e completem as implementações com TODO em `MetroNetworkImpl`. A operação auxiliar para avançar num caminho com `opposite` (secção 7.2) é acrescentada por vocês à interface.
 
 Tal como nas travessias, validem as estações antes de iniciar a pesquisa e lancem `InvalidMetroException` para parâmetros `null` ou estações inexistentes.
 
@@ -352,6 +352,14 @@ Algorithm RECONSTRUCT_PATH(graph, origin, destination, discoveryEdge)
 
 No `Main`, apresentem o percurso começando pela origem e avançando com `opposite`, mostrando em cada ligação a linha e o tempo. Como o grafo é não orientado, a ordem dos extremos guardados numa aresta não determina o sentido em que a percorremos.
 
+O `Main` só conhece a interface `MetroNetwork` e não tem acesso ao grafo. Por isso, **acrescentem à interface** uma operação que devolva a estação no outro extremo de uma ligação, por exemplo:
+
+```java
+Station oppositeStation(Station station, Edge<Connection, Station> edge);
+```
+
+Definam o contrato e o Javadoc e implementem-na em `MetroNetworkImpl` com `opposite`. Validem a estação e a aresta como nas restantes operações: estações inválidas ou inexistentes e arestas `null`, externas, removidas ou que não liguem à estação são rejeitadas com `InvalidMetroException`. Atenção: `opposite`, em `GraphEdgeList`, devolve `null` quando a aresta não liga ao vértice indicado.
+
 **Questão:** este caminho tem o menor número de ligações. Tem necessariamente o menor tempo total? Justifiquem.
 
 ### 7.3. Exercício adicional 3 — Calcular o tempo total
@@ -410,13 +418,14 @@ No `Main`, para um par de estações:
 | Duas execuções sucessivas | Não partilham o estado da pesquisa |
 
 - [ ] As três operações têm contrato e Javadoc.
+- [ ] A interface inclui a operação acrescentada para avançar com `opposite`, com contrato, Javadoc e implementação em `MetroNetworkImpl`.
 - [ ] `hasPath` distingue conectividade de ligação direta.
 - [ ] `findPath` utiliza BFS e guarda a aresta de descoberta de cada estação.
 - [ ] O caminho devolvido é uma lista ordenada de arestas.
 - [ ] O tempo total corresponde à soma dos tempos dessas ligações.
 - [ ] O grupo explica por que razão BFS não garante o caminho de menor tempo.
 
-**Finalização complementar:** acrescentem as três operações, a demonstração no `Main` e os testes aos elementos da finalização principal (secção 6). Registem uma situação em que o caminho com menos ligações possa ter um tempo superior ao de um caminho com mais ligações.
+**Finalização complementar:** acrescentem as três operações, a operação acrescentada à interface (secção 7.2), a demonstração no `Main` e os testes aos elementos da finalização principal (secção 6). Registem uma situação em que o caminho com menos ligações possa ter um tempo superior ao de um caminho com mais ligações.
 
 
 ## Documentação do ADT Graph
