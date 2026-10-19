@@ -416,7 +416,7 @@ No `Main`, para um par de estações:
 - [ ] O tempo total corresponde à soma dos tempos dessas ligações.
 - [ ] O grupo explica por que razão BFS não garante o caminho de menor tempo.
 
-**Finalização complementar:** acrescentem as três operações, a demonstração no `Main` e os testes aos elementos da entrega principal. Registem uma situação em que o caminho com menos ligações possa ter um tempo superior ao de um caminho com mais ligações.
+**Finalização complementar:** acrescentem as três operações, a demonstração no `Main` e os testes aos elementos da finalização principal (secção 6). Registem uma situação em que o caminho com menos ligações possa ter um tempo superior ao de um caminho com mais ligações.
 
 
 ## Documentação do ADT Graph
