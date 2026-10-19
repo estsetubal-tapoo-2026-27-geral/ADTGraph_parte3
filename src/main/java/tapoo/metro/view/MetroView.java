@@ -13,15 +13,15 @@ import javafx.scene.control.Label;
 import javafx.scene.control.Separator;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.util.StringConverter;
 import tapoo.metro.model.Connection;
 import tapoo.metro.model.InvalidMetroException;
+import tapoo.metro.model.LineColour;
 import tapoo.metro.model.MetroNetworkImpl;
 import tapoo.metro.model.Station;
-import tapoo.metro.model.LineColour;
-import javafx.scene.layout.FlowPane;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -52,7 +52,7 @@ public final class MetroView extends BorderPane {
 
         setTop(buildConfigurationPanel());
         setCenter(buildGraphPanel());
-        setBottom(buildStatiticsPanel());
+        setBottom(buildStatisticsPanel());
     }
 
     private VBox buildConfigurationPanel() {
@@ -106,7 +106,7 @@ public final class MetroView extends BorderPane {
         return graphView;
     }
 
-    private FlowPane buildStatiticsPanel() {
+    private FlowPane buildStatisticsPanel() {
         // Bottom area - statistics
         FlowPane bottom = new FlowPane(10, 10);
         bottom.setPadding(new Insets(30));
@@ -136,7 +136,7 @@ public final class MetroView extends BorderPane {
             network.connectStations(origin.getValue(), destination.getValue(), time, lineColour.getValue());
         }));
         removeConnection.setOnAction(event -> perform(() -> network.removeConnection(connectionToRemove.getValue())));
-      }
+    }
 
     public void init() {
         graphView.init();
@@ -174,11 +174,8 @@ public final class MetroView extends BorderPane {
         connectionToRemove.getItems().setAll(network.graphForView().edges());
     }
 
-    /**
-     * Fully wired: completing the domain methods automatically enables this display.
-     */
+    /** Refresh the statistics computed by the Part 2 domain methods. */
     private void updateStatistics() {
-
         labelNumberStations.setText(String.valueOf(network.numberOfStations()));
         labelNumberConnections.setText(String.valueOf(network.numberOfConnections()));
         List<String> busiest = network.stationsWithMostConnections();

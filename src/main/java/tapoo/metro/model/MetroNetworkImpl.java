@@ -6,10 +6,10 @@ import com.brunomnsilva.smartgraph.graph.GraphEdgeList;
 import com.brunomnsilva.smartgraph.graph.Vertex;
 
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 
 /** Domain operations implemented using the Graph ADT. */

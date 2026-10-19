@@ -5,9 +5,8 @@ import tapoo.metro.model.*;
 /** Fictitious network; travel times are illustrative. */
 public final class Main {
     public static void main(String[] args) {
-
-       MetroNetwork network= MetroSample.create();
-          // Aeroporto is isolated. Distinct edges have repeated travel times.
+        MetroNetwork network = MetroSample.create();
+        // Aeroporto is isolated. Distinct edges have repeated travel times.
         System.out.println("Stations: " + network.numberOfStations());
         System.out.println("Alameda neighbours: " + network.neighbouringStations(new Station(" alameda ")));
         System.out.println("Aeroporto neighbours: " + network.neighbouringStations(new Station("AEROPORTO")));

@@ -23,8 +23,8 @@ public interface MetroNetwork {
      *
      * @param origin origin station
      * @param destination destination station
-     * @param lineColour required line colour
      * @param travelMinutes positive estimated travel time in minutes
+     * @param lineColour required line colour
      * @throws InvalidMetroException if a station is invalid or unknown, both stations identify the same station,
      *                               the travel time is not positive, the colour is null, or a connection for the same pair and colour already exists
      */
@@ -60,7 +60,7 @@ public interface MetroNetwork {
     int directTravelMinutes(Station origin, Station destination);
 
     /**
-     * Remove a station and all its incident edges; reject invalid/unknown names.
+     * Remove a station and all its incident edges; reject invalid or unknown stations.
      */
     void removeStation(Station station);
 
@@ -72,7 +72,7 @@ public interface MetroNetwork {
     int numberOfConnections();
 
     /**
-     * Number of incident edges, including parallel edges after the extension.
+     * Number of incident edges, including parallel edges; reject invalid or unknown stations.
      */
     int numberOfConnectionsByStation(Station station);
 

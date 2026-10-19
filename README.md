@@ -15,7 +15,6 @@ Após concluírem as travessias, realizem a **atividade complementar da secção
 
 Utilizem **Java 17 ou superior e Maven**. Abram como projeto Maven a pasta que contém `pom.xml`.
 
-
 | Ficheiro | Estado no projeto da Parte 3 |
 |---|---|
 | `MetroNetworkImpl` | Remoções, estatísticas, cores e paralelas da Parte 2 resolvidas; cinco métodos A3.3 com TODO |
@@ -24,10 +23,11 @@ Utilizem **Java 17 ou superior e Maven**. Abram como projeto Maven a pasta que c
 | `MetroView` | Manipulação, estatísticas, seleção da linha e cores dos traços implementadas |
 | `MetroSample` | Rede fictícia com quatro ligações coloridas e Aeroporto isolado |
 | `Main` | Demonstração funcional das Partes 1–2; comentários indicam onde acrescentar os resultados A3.3 |
+| `MetroNetworkTest` | Esqueleto da classe de testes JUnit 5; comentários indicam onde construir a rede de teste e acrescentar os testes A3.3 |
 
-Os ficheiros Java estão em `src/main/java/tapoo/metro`. `Connection` é uma classe independente em `model/Connection.java`, mantendo a organização da Parte 2. Foi alargada com a cor da linha. Quando necessário, importem `tapoo.metro.model.Connection`.
+Os ficheiros Java estão em `src/main/java/tapoo/metro`; os testes estão em `src/test/java/tapoo/metro/model`. `Connection` é uma classe independente em `model/Connection.java`, mantendo a organização da Parte 2, e guarda o tempo estimado e a cor da linha. Quando necessário, importem `tapoo.metro.model.Connection`.
 
-A rede identifica estações pelo **nome normalizado**, não pela identidade dos objetos `Station`. `checkStation` recebe `Station`, procura o vértice correspondente e devolve a estação registada. Para comparar estações em resultados, resolvam o destino ou comparem os nomes normalizados; `Station` não redefine `equals`.
+A rede identifica estações pelo **nome normalizado**, não pela identidade dos objetos `Station`. `checkStation` recebe `Station`, valida-a e devolve o vértice correspondente (`Vertex<Station>`), cujo elemento é a estação registada. Para comparar estações em resultados, resolvam-nas com `checkStation` e comparem os vértices, ou comparem os nomes normalizados; `Station` não redefine `equals`, pelo que `contains` com um novo objeto `Station` devolve `false`.
 
 A rede é fictícia. Permite ligações paralelas para cores diferentes e rejeita laços e duplicados do mesmo par/cor. `directTravelMinutes` devolve o menor tempo entre ligações **diretas**. O `Main` acrescenta uma paralela BLUE Alameda–Saldanha para demonstrar grau versus vizinhos; a vista usa uma instância independente da rede inicial.
 
@@ -54,7 +54,7 @@ O `Set` controla repetições; a `List` regista a ordem do resultado. No DFS, um
 - Distinguir estações alcançáveis de todas as estações da rede.
 - Integrar os algoritmos no domínio do metro e verificar os resultados.
 
-Organização sugerida para 100 minutos: 25 minutos de teoria e 75 minutos de trabalho nas travessias. Prevejam concluir a validação fora da aula se necessário. As atividades principais requerem cerca de 80–110 minutos de trabalho prático; as complementares de caminhos e tempo requerem cerca de 70–100 minutos e destinam-se a trabalho extra-aula.
+Organização sugerida para a aula de 100 minutos: 25 minutos de teoria e 75 minutos de trabalho nas travessias. Como as atividades principais requerem cerca de 80–110 minutos de trabalho prático, prevejam concluir a validação fora da aula se necessário. As complementares de caminhos e tempo requerem cerca de 70–100 minutos e destinam-se a trabalho extra-aula.
 
 ## 2. Preparação — contrato das novas operações
 
@@ -67,7 +67,6 @@ List<Station> depthFirstTraversal(Station start);
 
 **Contrato comum:**
 
-
 - Cada estação alcançável a partir da inicial surge exatamente uma vez.
 - As estações de outras componentes do grafo não aparecem no resultado.
 - Uma estação isolada origina uma lista com essa estação apenas.
@@ -75,7 +74,7 @@ List<Station> depthFirstTraversal(Station start);
 - Uma estação inicial `null` ou inexistente é rejeitada através de `InvalidMetroException`.
 - Uma rede vazia não tem uma estação inicial válida; aplica-se a mesma regra de rejeição.
 
-Reutilizem a resolução e validação de estações existente na Parte 2. A versão que recebe `Station` deve respeitar o critério de identidade/igualdade já definido no projeto e obter o vértice correspondente na rede.
+Reutilizem a resolução e validação de estações existente na Parte 2: utilizem `checkStation` para validar a estação recebida e obter o vértice correspondente na rede, segundo o critério do nome normalizado.
 
 Antes de implementar, leiam o Javadoc fornecido e completem-no se necessário: finalidade, parâmetro, resultado e exceções.
 
@@ -122,10 +121,11 @@ Algorithm BFS(graph, start)
     return result
 ```
 
+A estação é marcada como **descoberta quando é colocada na fila**, pelo que nunca entra nela mais do que uma vez.
 
 ### 3.3. Executar e interpretar
 
-No `Main`, apresentem o resultado do BFS a partir da estação escolhida e comparem-no com a simulação.
+No `Main`, apresentem o resultado do BFS a partir da estação escolhida e comparem-no com a simulação. Se a ordem diferir, verifiquem se é igualmente válida: o ADT pode devolver os vizinhos noutra ordem (ver secção 5).
 
 Respondam:
 
@@ -133,7 +133,7 @@ Respondam:
 2. A cor da linha ou o tempo estimado de uma ligação altera este algoritmo?
 3. Se o resultado tiver menos estações do que a rede, o que podemos concluir?
 
-O BFS considera aqui apenas a existência de ligações. A lista da travessia **não é um itinerário**: duas estações consecutivas na lista podem não estar diretamente ligadas. Para reconstruir um caminho com menos ligações, seria necessário guardar também os predecessores; essa extensão é proposta na atividade complementar da secção 7.
+O BFS considera aqui apenas a existência de ligações. A lista da travessia **não é um itinerário**: duas estações consecutivas na lista podem não estar diretamente ligadas. Para reconstruir um caminho com menos ligações, seria necessário guardar também a aresta pela qual cada estação foi descoberta (aresta de descoberta); essa extensão é proposta na atividade complementar da secção 7.
 
 ## 4. Atividade 2 — Explorar a rede em profundidade (DFS)
 
@@ -143,11 +143,11 @@ O BFS considera aqui apenas a existência de ligações. A lista da travessia **
 
 Utilizem a mesma estação inicial e a mesma ordem de consideração dos vizinhos da atividade anterior. Registem:
 
-| Passo | Estação retirada da pilha | Estações processadas | Pilha após o passo | Resultado |
+| Passo | Estação retirada da pilha | Estações visitadas | Pilha após o passo | Resultado |
 |---|---|---|---|---|
 | Inicial | — | Vazio | Estação inicial | Vazio |
 
-Identifiquem explicitamente o topo da pilha. O último vizinho colocado será o primeiro retirado.
+Identifiquem explicitamente o topo da pilha. O último vizinho colocado será o primeiro retirado. Se a estação retirada já tiver sido visitada, é ignorada.
 
 ### 4.2. Implementar
 
@@ -176,6 +176,8 @@ Algorithm DFS(graph, start)
     return result
 ```
 
+A estrutura é semelhante à do BFS, mas no DFS a estação é marcada como **visitada quando é retirada da pilha**, e não quando é descoberta; por isso, a mesma estação pode entrar mais do que uma vez na pilha. Se usassem a marcação do BFS (ao inserir) com uma pilha, a ordem obtida não seria, em geral, em profundidade.
+
 Se quiserem visitar primeiro o primeiro vizinho devolvido pelo ADT, terão de colocar os vizinhos na pilha pela ordem inversa. Essa adaptação é opcional; documentem a ordem adotada.
 
 ### 4.3. Executar e comparar
@@ -186,7 +188,7 @@ Respondam:
 
 1. A ordem de visita é necessariamente igual nos dois algoritmos?
 2. Os conjuntos de estações devolvidos devem ser iguais? Justifiquem.
-3. Porque é necessário guardar as estações já processadas num grafo com ciclos?
+3. Porque é necessário guardar as estações já descobertas/visitadas num grafo com ciclos?
 4. O DFS garante um caminho com o menor número de ligações?
 5. Se duas linhas ligarem o mesmo par de estações, essa estação deve aparecer duas vezes?
 
@@ -194,7 +196,7 @@ Tal como no BFS, a lista do DFS representa a **ordem de processamento**, não um
 
 ## 5. Verificação dos resultados
 
-Comecem pela rede da Parte 2. Para verificar os casos que essa rede não contenha, criem redes pequenas e independentes nos testes, sem alterar permanentemente os dados do exemplo.
+Comecem pela rede da Parte 2. Para verificar os casos que essa rede não contenha, criem redes pequenas e independentes nos testes JUnit (`MetroNetworkTest`), sem alterar permanentemente os dados do exemplo.
 
 | Caso | O que verificar em BFS e DFS |
 |---|---|
@@ -202,19 +204,19 @@ Comecem pela rede da Parte 2. Para verificar os casos que essa rede não contenh
 | Rede com ciclo | A execução termina e não repete estações |
 | Estação isolada | O resultado contém apenas a estação inicial |
 | Duas componentes | Só aparecem estações da componente inicial |
-| Arestas paralelas, se suportadas | Não provocam repetição de estações |
+| Arestas paralelas | Não provocam repetição de estações |
 | Estação desconhecida ou `null` | É lançada `InvalidMetroException` |
 | Rede vazia | A estação inicial é rejeitada |
 | Duas execuções sucessivas | O estado da primeira não interfere na segunda |
 | Preservação da rede | As estações e as ligações mantêm-se após a travessia |
 
-Para comparar uma **sequência exata**, a ordem dos vizinhos tem de estar definida. Se o ADT não garantir essa ordem, verifiquem as propriedades do algoritmo e a ausência de repetições, sem exigir uma única sequência entre estações igualmente elegíveis.
+Para comparar uma **sequência exata**, a ordem dos vizinhos tem de estar definida. A implementação `GraphEdgeList` **não garante** a ordem devolvida por `incidentEdges`, que pode mudar entre execuções. Por isso, nos testes, verifiquem as propriedades do algoritmo (primeira estação, conjunto de estações alcançadas, ausência de repetições e, no BFS, que as estações mais próximas surgem antes das mais distantes), sem exigir uma única sequência entre estações igualmente elegíveis.
 
 ### Rede pequena para simulação e testes
 
-Criem quatro estações de teste `A`, `B`, `C` e `D`, com ligações não orientadas `A–B`, `A–C`, `B–C` e `C–D`. Acrescentem uma estação isolada `E`. Usem tempos válidos e cores de linha admitidas na Parte 2.
+Criem quatro estações de teste `A`, `B`, `C` e `D`, com ligações não orientadas `A–B`, `A–C`, `B–C` e `C–D`. Acrescentem uma estação isolada `E`. Usem tempos válidos e cores de linha admitidas na Parte 2. Construam esta rede no método `setUp` de `MetroNetworkTest`, para que cada teste comece com uma rede nova. Se atribuírem já `3` minutos a `A–C` e `4` minutos a `C–D`, poderão reutilizá-la na secção 7.3.
 
-Assumindo que os vizinhos são considerados por ordem alfabética e colocados nas estruturas nessa ordem:
+Na simulação em papel, assumindo que os vizinhos são considerados por ordem alfabética e colocados nas estruturas nessa ordem:
 
 | Operação | Resultado esperado |
 |---|---|
@@ -222,7 +224,7 @@ Assumindo que os vizinhos são considerados por ordem alfabética e colocados na
 | DFS a partir de A, com o pseudocódigo acima | A, C, D, B |
 | BFS ou DFS a partir de E | E |
 
-Esta rede permite observar ciclos, uma estação isolada e a diferença entre a fila e a pilha. Os nomes são apenas dados de teste; as operações continuam a trabalhar com objetos `Station`.
+Ao executar o código, BFS e DFS podem devolver outra ordem igualmente válida (por exemplo, BFS `A, C, B, D`), consoante a ordem dos vizinhos devolvida pelo ADT. Esta rede permite observar ciclos, uma estação isolada e a diferença entre a fila e a pilha. Os nomes são apenas dados de teste; as operações continuam a trabalhar com objetos `Station`.
 
 ## 6. Critérios de conclusão
 
@@ -238,8 +240,7 @@ Esta rede permite observar ciclos, uma estação isolada e a diferença entre a 
 - [ ] O grupo consegue explicar FIFO, LIFO, ciclos e arestas paralelas.
 - [ ] O grupo distingue uma travessia de um caminho e de um caminho de menor tempo.
 
-**Entrega:** alterações à interface, implementação das duas travessias, demonstração no `Main` e testes. Acrescentem ao README do grupo as duas simulações e uma breve comparação dos resultados.
-
+**Finalização:** alterações à interface, implementação das duas travessias, demonstração no `Main` e testes. Acrescentem ao README do grupo as duas simulações e uma breve comparação dos resultados.
 
 ## 7. Atividade complementar — Encontrar um caminho e calcular o seu tempo
 **Estes exercícios deverão ser realizados em tempo extra-aula. A sua resolução é vivamente aconselhada.**
@@ -297,13 +298,13 @@ O método deve devolver uma **lista de arestas ordenada da origem para o destino
 
 Ao descobrir uma estação pela primeira vez, guardem num `Map` a **aresta pela qual foi descoberta**. Não substituam esse registo quando voltarem a encontrar a estação.
 
-```text
+```pascal
 Algorithm FIND_PATH(graph, origin, destination)
-    visited <- empty set
+    discovered <- empty set
     discoveryEdge <- empty map
     pending <- empty queue
 
-    add origin to vidited
+    add origin to discovered
     enqueue(pending, origin)
 
     while pending is not empty do
@@ -315,8 +316,8 @@ Algorithm FIND_PATH(graph, origin, destination)
 
         for each edge in graph.incidentEdges(current) do
             neighbour <- graph.opposite(current, edge)
-            if neighbour is not in visited then
-                add neighbour to dvisited
+            if neighbour is not in discovered then
+                add neighbour to discovered
                 discoveryEdge[neighbour] <- edge
                 enqueue(pending, neighbour)
             end if
@@ -332,7 +333,7 @@ Neste pseudocódigo, `origin` e `destination` são os vértices obtidos após va
 
 Comecem no destino. A aresta de descoberta identifica a ligação usada para lá chegar. Utilizem `opposite` para regressar ao vértice anterior e repitam até alcançar a origem. Como recolhem as arestas do destino para a origem, invertam a lista no final.
 
-```text
+```pascal
 Algorithm RECONSTRUCT_PATH(graph, origin, destination, discoveryEdge)
     path <- empty list
     current <- destination
@@ -372,7 +373,7 @@ O método deve somar os tempos estimados guardados nos objetos `Connection` das 
 - A operação não modifica a lista nem a rede.
 - O cálculo inclui apenas os tempos das ligações. Não acrescentem tempos de espera nem de mudança de linha.
 
-```text
+```pascal
 Algorithm TOTAL_TRAVEL_MINUTES(path)
     validate path and its edges
     total <- 0
@@ -402,7 +403,7 @@ No `Main`, para um par de estações:
 | Origem igual ao destino | `hasPath` devolve `true`; caminho vazio; tempo `0` |
 | Ciclos na rede | A pesquisa termina e o caminho não repete estações |
 | Caminhos alternativos | O caminho devolvido tem o menor número de ligações |
-| Arestas paralelas, se suportadas | É guardada a aresta concreta escolhida pelo BFS |
+| Arestas paralelas | É guardada a aresta concreta escolhida pelo BFS |
 | Caminho devolvido | Partindo da origem, percorrer as arestas com `opposite` permite chegar ao destino |
 | Lista vazia | Tempo total `0` |
 | Lista ou aresta `null`, aresta externa ou removida | `InvalidMetroException` |
@@ -415,7 +416,7 @@ No `Main`, para um par de estações:
 - [ ] O tempo total corresponde à soma dos tempos dessas ligações.
 - [ ] O grupo explica por que razão BFS não garante o caminho de menor tempo.
 
-**Entrega complementar:** acrescentem as três operações, a demonstração no `Main` e os testes aos elementos da entrega principal. Registem uma situação em que o caminho com menos ligações possa ter um tempo superior ao de um caminho com mais ligações.
+**Finalização complementar:** acrescentem as três operações, a demonstração no `Main` e os testes aos elementos da entrega principal. Registem uma situação em que o caminho com menos ligações possa ter um tempo superior ao de um caminho com mais ligações.
 
 
 ## Documentação do ADT Graph
