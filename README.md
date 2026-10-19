@@ -299,11 +299,11 @@ Ao descobrir uma estação pela primeira vez, guardem num `Map` a **aresta pela 
 
 ```text
 Algorithm FIND_PATH(graph, origin, destination)
-    discovered <- empty set
+    visited <- empty set
     discoveryEdge <- empty map
     pending <- empty queue
 
-    add origin to discovered
+    add origin to vidited
     enqueue(pending, origin)
 
     while pending is not empty do
@@ -315,8 +315,8 @@ Algorithm FIND_PATH(graph, origin, destination)
 
         for each edge in graph.incidentEdges(current) do
             neighbour <- graph.opposite(current, edge)
-            if neighbour is not in discovered then
-                add neighbour to discovered
+            if neighbour is not in visited then
+                add neighbour to dvisited
                 discoveryEdge[neighbour] <- edge
                 enqueue(pending, neighbour)
             end if
