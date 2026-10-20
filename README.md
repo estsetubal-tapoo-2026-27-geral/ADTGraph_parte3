@@ -167,6 +167,7 @@ Algorithm DFS(graph, start)
                 neighbour <- graph.opposite(current, edge)
                 if neighbour is not in visited then
                     push(pending, neighbour)
+                    add neighbour to visited
                 end if
             end for
         end if
