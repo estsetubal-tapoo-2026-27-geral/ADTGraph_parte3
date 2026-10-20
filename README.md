@@ -98,11 +98,11 @@ Implementem `breadthFirstTraversal` em `MetroNetworkImpl`, seguindo o pseudocód
 
 ```pascal
 Algorithm BFS(graph, start)
-    discovered <- empty set
+    visited <- empty set
     pending <- empty queue
     result <- empty list
 
-    add start to discovered
+    add start to visited
     enqueue(pending, start)
 
     while pending is not empty do
@@ -111,8 +111,8 @@ Algorithm BFS(graph, start)
 
         for each edge in graph.incidentEdges(current) do
             neighbour <- graph.opposite(current, edge)
-            if neighbour is not in discovered then
-                add neighbour to discovered
+            if neighbour is not in visited then
+                add neighbour to visited
                 enqueue(pending, neighbour)
             end if
         end for
@@ -159,11 +159,10 @@ Algorithm DFS(graph, start)
     pending <- empty stack
     result <- empty list
     push(pending, start)
+    add start to visited
     while pending is not empty do
         current <- pop(pending)
-        if current is not in visited then
-            add current to visited
-            append current.element to result
+        append current.element to result
             for each edge in graph.incidentEdges(current) do
                 neighbour <- graph.opposite(current, edge)
                 if neighbour is not in visited then
