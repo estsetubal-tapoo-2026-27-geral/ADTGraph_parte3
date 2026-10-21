@@ -158,27 +158,30 @@ Algorithm DFS(graph, start)
     visited <- empty set
     pending <- empty stack
     result <- empty list
-    push(pending, start)
+    
     add start to visited
+    push(pending, start)
+    
     while pending is not empty do
         current <- pop(pending)
         append current.element to result
-            for each edge in graph.incidentEdges(current) do
-                neighbour <- graph.opposite(current, edge)
-                if neighbour is not in visited then
-                    push(pending, neighbour)
-                    add neighbour to visited
-                end if
-            end for
-        end if
+        
+        for each edge in graph.incidentEdges(current) do
+            neighbour <- graph.opposite(current, edge)
+            if neighbour is not in visited then
+                add neighbour to visited
+                push(pending, neighbour)
+            end if
+        end for
     end while
 
     return result
 ```
 
-A estrutura é semelhante à do BFS, mas no DFS a estação é marcada como **visitada quando é retirada da pilha**, e não quando é descoberta; por isso, a mesma estação pode entrar mais do que uma vez na pilha. Se usassem a marcação do BFS (ao inserir) com uma pilha, a ordem obtida não seria, em geral, em profundidade.
+A estrutura é idêntica à do BFS, substituindo apenas a fila (*queue*, FIFO) por uma pilha (*stack*, LIFO). Como cada estação é marcada como **descoberta logo quando é empilhada**, nunca entra na pilha mais do que uma vez. *(Nota: numa variante estrita do DFS iterativo, a marcação em `visited` só ocorre ao retirar da pilha com `pop`, o que permitiria entradas repetidas na pilha para garantir uma ordem de profundidade estrita em grafos com ciclos; contudo, nesta atividade adotamos a marcação ao inserir por simplicidade e simetria direta com o BFS).*
 
-Se quiserem visitar primeiro o primeiro vizinho devolvido pelo ADT, terão de colocar os vizinhos na pilha pela ordem inversa. Essa adaptação é opcional; documentem a ordem adotada.
+Como a pilha segue uma disciplina LIFO, o último vizinho empilhado será o primeiro a ser explorado. Se quiserem visitar primeiro o primeiro vizinho devolvido pelo ADT, terão de colocar os vizinhos na pilha pela ordem inversa. Essa adaptação é opcional; documentem a ordem adotada.
+
 
 ### 4.3. Executar e comparar
 
